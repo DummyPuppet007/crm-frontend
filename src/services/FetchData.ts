@@ -20,7 +20,7 @@ export async function FetchData<T>({
     data = null,
     headers = { "Content-Type": "application/json" },
 
-}: FetchDataVariable): Promise<FetchDataResponse<T>> {  console.log("Fetching data :", data);
+}: FetchDataVariable): Promise<FetchDataResponse<T>> {
     try {
         const response = await fetch(`${API_BASE_URL}${url}`, {
             method,
@@ -41,7 +41,7 @@ export async function FetchData<T>({
         }
 
         const responseData = await response.json();
-        console.log(responseData);
+
         return {
             success : responseData.success,
             statusCode: 200,

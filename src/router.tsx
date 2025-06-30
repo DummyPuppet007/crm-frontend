@@ -1,8 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom';
-import { LoginPage, Register, Role } from './components/index.ts';
+import { createBrowserRouter, Route } from 'react-router-dom';
+import { Action, LoginPage, Module, Permission, Register, Role, RolePermission, RoutePermission, UserPermission } from './components/index.ts';
 import NotFoundPage from './NotFoundPage.tsx';
 import Dashboard from './components/Dashboard/Dashboard.tsx';
-
 
 export const router = createBrowserRouter([
     {
@@ -28,6 +27,30 @@ export const router = createBrowserRouter([
                     {
                         path: "roles",
                         element: <Role />,
+                    },
+                    {
+                        path: "modules",
+                        element: <Module />,
+                    },
+                    {
+                        path: "actions",
+                        element: <Action />,
+                    },
+                    {
+                        path: "permissions",
+                        element: <Permission />,
+                    },
+                    {
+                        path: "role-permissions",
+                        element: <RolePermission />,
+                    },
+                    {
+                        path: "user-permissions",
+                        element: <UserPermission />,
+                    },
+                    {
+                        path: "route-permissions",
+                        element: <RoutePermission />,
                     }
                 ]
             }

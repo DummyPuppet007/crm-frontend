@@ -8,9 +8,10 @@ import { FetchData } from "../../services/FetchData";
 interface UserFormProps {
     open : boolean;
     onClose : () => void;
+    refreshData: () => void;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ open, onClose }) => {
+const UserForm: React.FC<UserFormProps> = ({ open, onClose, refreshData }) => {
     const [form] = useForm();
     const [roles, setRoles] = useState<RoleList[]>([]);
     const [error, setError] = useState<string>("");
@@ -44,13 +45,14 @@ const UserForm: React.FC<UserFormProps> = ({ open, onClose }) => {
                 method: "POST",
                 data: formData,
             });
-            console.log(response);
+    
             if (!response || response.statusCode != 200) throw new Error('Failed To Create User.');
             return response.data;
         } catch (error) {
             throw error;
         }
     };
+
     const onFinish = async (values: UserFormData) => {
         try {
             setLoading(true);
@@ -59,6 +61,7 @@ const UserForm: React.FC<UserFormProps> = ({ open, onClose }) => {
             message.success('User Created Successfully!');
             form.resetFields();
             onClose();
+            refreshData();
         } catch (error) {
             message.error('Failed To Create User.');
         } finally {
@@ -90,14 +93,14 @@ const UserForm: React.FC<UserFormProps> = ({ open, onClose }) => {
                 autoComplete="off"
             >
                 <Form.Item label="First Name" name="firstName" rules={[{ required: true, message: 'Please input your first name!' }]}>
-                    <Input placeholder="Enter First Name" />
+                    <Input placeholder="Enter First Name" autoFocus/>
                 </Form.Item>
 
                 <Form.Item label="Middle Name" name="middleName">
                     <Input placeholder="Enter Middle Name" />
                 </Form.Item>
 
-                <Form.Item label="Last Name" name="lastN    ame" rules={[{ required: true, message: 'Please input your last name!' }]}>
+                <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please input your last name!' }]}>
                     <Input placeholder="Enter Last Name" />
                 </Form.Item>
 

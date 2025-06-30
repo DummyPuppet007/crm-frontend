@@ -20,6 +20,12 @@ const data = {
             icon: KeySquare,
             items: [
                 { title: "Role", url: "access/roles" },
+                { title: "Module", url: "access/modules" },
+                { title: "Action", url: "access/actions" },
+                { title: "Permission", url: "access/permissions" },
+                { title: "Role Permission", url: "access/role-permissions" },
+                { title: "User Permission", url: "access/user-permissions" },
+                { title: "Route Permission", url: "access/route-permissions" },
             ]
         }
     ],

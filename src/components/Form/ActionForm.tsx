@@ -1,32 +1,31 @@
-import CustomModal from '../common/Modal';
-import { Form, Input, message } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import { useState } from 'react';
-import type { RoleFormData } from '../../types/auth.types';
-import { FetchData } from '../../services/FetchData';
+import { useState } from "react";
+import CustomModal from "../common/Modal";
+import { Form, Input, message } from "antd";
+import type { ActionFormData } from "../../types/auth.types";
+import { FetchData } from "../../services/FetchData";
 
-interface RoleFormProps {
+interface ActionFormProps {
     open : boolean;
     onClose : () => void;
     refreshData : () => void;
 }
 
-const createRole = async (formData: RoleFormData) => {
+const createAction = async (formData: ActionFormData) => {
     try {
         const response = await FetchData<any>({
-            url: "access/create-role",
+            url: "access/create-action",
             method: "POST",
             data: formData,
         });
-        if (!response || response.statusCode != 200) throw new Error('Failed to create role');
+        if (!response || response.statusCode != 200) throw new Error('Failed to create action');
         return response.data;
     } catch (error) {
         throw error;
     }
 };
 
-const RoleForm : React.FC<RoleFormProps> = ({open, onClose, refreshData}) => {
-    const [form] = useForm();
+const ActionForm : React.FC<ActionFormProps> = ({open, onClose, refreshData}) => {
+    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
 
     const inputStyle = {
@@ -35,32 +34,32 @@ const RoleForm : React.FC<RoleFormProps> = ({open, onClose, refreshData}) => {
         boxShadow: 'none',
     };
 
-    const onFinish = async (values: RoleFormData) => {
+    const onFinish = async (values: ActionFormData) => {
         try {
             setLoading(true);
-            await createRole(values);
+            await createAction(values);
 
-            message.success('Role created successfully!');
+            message.success('Action created successfully!');
             form.resetFields();
             onClose();
             refreshData();
         } catch (error) {
-            message.error('Failed to create role.');
+            message.error('Failed To Create Action.');
         } finally {
             setLoading(false);
         }
     };
 
     const onFinishFailed = () => {
-        message.error('Please fill all required fields.');
+        message.error('Please Fill All Required Fields.');
     };
+
 
     return (
         <>
-    
             <CustomModal
                 open={open}
-                title="Create Role"
+                title="Create Action"
                 okText='Create'
                 cancelText='Cancel'
                 onOk={form.submit}
@@ -68,7 +67,7 @@ const RoleForm : React.FC<RoleFormProps> = ({open, onClose, refreshData}) => {
             >
                 <Form
                     form={form}
-                    labelCol={{ span: 5 }}
+                    labelCol={{ span: 6 }}
                     wrapperCol={{ span: 17 }}
                     layout="horizontal"
                     style={{ maxWidth: 600 }}
@@ -77,22 +76,22 @@ const RoleForm : React.FC<RoleFormProps> = ({open, onClose, refreshData}) => {
                     onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
-                        label="Role Name"
-                        name="roleName"
-                        rules={[{ required: true, message: 'Please input the role name!' }]}
+                        label="Action Name"
+                        name="actionName"
+                        rules={[{ required: true, message: 'Please input the action name!' }]}
                     >
-                        <Input placeholder="Enter Role Name" style={inputStyle} autoFocus/>
+                        <Input placeholder="Enter Action Name" style={inputStyle} autoFocus/>
                     </Form.Item>
                     <Form.Item
                         label="Description"
                         name="description"
                     >
-                        <Input placeholder="Enter Role Description" style={inputStyle} />
+                        <Input placeholder="Enter Action Description" style={inputStyle} />
                     </Form.Item>
                 </Form>
             </CustomModal>
         </>
     );
-};
+}
 
-export default RoleForm;
+export default ActionForm;

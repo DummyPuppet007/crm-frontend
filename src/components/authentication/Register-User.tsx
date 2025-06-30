@@ -13,6 +13,7 @@ const Register: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [users, setUsers] = useState<any>([]);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -20,11 +21,12 @@ const Register: React.FC = () => {
 
   const fetchUsers = async () => {
       try {
+        setLoading(true);
         const response = await FetchData<any>({
           url: "auth/users",
           method: "GET",
         });
-        console.log(response);
+       
         if (!response || response.statusCode !== 200) {
           setError("Error: Failed to fetch roles. " + response.message);
           return;
@@ -33,6 +35,9 @@ const Register: React.FC = () => {
       }
       catch (error: any) {
         setError("Error : " + error.message);
+      }
+      finally {
+        setLoading(false);
       }
     }
 
@@ -45,14 +50,14 @@ const Register: React.FC = () => {
           style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}
           onClick={() => setModalOpen(true)}
         >Create User</Button>
-        <UserForm open={modalOpen} onClose={() => setModalOpen(false)}/>
+        <UserForm open={modalOpen} onClose={() => setModalOpen(false)} refreshData={fetchUsers}/>
       </div>
         <AdvancedDataTable
                 columns={userColumns}
                 data={users}
-                // loading={loading}
+                loading={loading}
                 title="User List"
-                searchableColumns={['firstName', 'username']}
+                searchableColumns={['username']}
                 showRefresh={true}
                 onRefresh={fetchUsers}
                 rowKey="id"

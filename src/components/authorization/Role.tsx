@@ -2,7 +2,6 @@ import {  Button } from 'antd';
 import RoleForm from '../Form/RoleForm';
 import { useEffect, useState } from 'react';
 import { FetchData } from '../../services/FetchData';
-// import { DataTable } from '../DataTable/DataTable';
 import { roleColumns } from '../DataTable/columns/role-columns';
 import { AdvancedDataTable } from '../DataTable/AdvanceDataTable';
 import type { RoleList } from '../../types/auth.types';
@@ -11,6 +10,7 @@ const Role: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [roles, setRoles] = useState<RoleList[]>([]);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchRoles(); 
@@ -18,11 +18,12 @@ const Role: React.FC = () => {
 
   const fetchRoles = async () => {
     try {
+      setLoading(true);
       const response = await FetchData<any>({
         url: "access/roles",
         method: "GET",
       });
-      console.log(response);
+    
       if (!response || response.statusCode !== 200) {
         setError("Error : Failed to fetch Roles." + response.message);
       }
@@ -30,6 +31,8 @@ const Role: React.FC = () => {
       setRoles(response.data || []);
     }catch (error : any) {
       setError("Error : " + error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -41,7 +44,7 @@ const Role: React.FC = () => {
           style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}
           onClick={() => setModalOpen(true)}
         >Create Role</Button>
-        <RoleForm open={modalOpen} onClose={() => setModalOpen(false)}/>
+        <RoleForm open={modalOpen} onClose={() => setModalOpen(false)} refreshData={fetchRoles}/>
       </div>
 
       {/* <DataTable
@@ -61,7 +64,7 @@ const Role: React.FC = () => {
       <AdvancedDataTable
         columns={roleColumns}
         data={roles}
-        // loading={loading}
+        loading={loading}
         title="Role List"
         searchableColumns={['roleName', 'description']}
         showRefresh={true}

@@ -1,8 +1,8 @@
 import { Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import type { UserList } from '../../../types/auth.types';
+import type { UserPermissionList } from '../../../types/auth.types';
 
-export const userColumns: ColumnsType<UserList> = [
+export const userpermissionColumns: ColumnsType<UserPermissionList> = [
 {
     title: 'Sr. No.',
     key: 'srno',
@@ -13,46 +13,32 @@ export const userColumns: ColumnsType<UserList> = [
     sorter: false,
   },
   {
-  title: 'Name',
-  key: 'firstName',
-  sorter: (a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
-  sortDirections: ['ascend', 'descend'],
-  ellipsis: {
-    showTitle: false,
-  },
-  render: (_: any, record: { firstName: string; lastName: string }) => {
-    const fullName = `${record.firstName} ${record.lastName}`;
-    return (
-      <Tooltip placement="topLeft" title={fullName}>
-        <strong>{fullName}</strong>
-      </Tooltip>
-    );
-  },
-},
-
-  {
-    title: 'LogIn Id',
+    title: 'User Name',
     dataIndex: 'username',
     key: 'username',
+    sorter: (a, b) => a.username.localeCompare(b.username),
+    sortDirections: ['ascend', 'descend'],
     ellipsis: {
       showTitle: false,
     },
     render: (username: string) => (
       <Tooltip placement="topLeft" title={username}>
-        {username}
+        <strong>{username}</strong>
       </Tooltip>
     ),
   },
   {
-    title: 'Email ',
-    dataIndex: 'email',
-    key: 'email',
+    title: 'Permission Name',
+    dataIndex: 'permissionName',
+    key: 'permissionName',
+    sorter: (a, b) => a.permissionName.localeCompare(b.permissionName),
+    sortDirections: ['ascend', 'descend'],
     ellipsis: {
       showTitle: false,
     },
-    render: (email: string) => (
-      <Tooltip placement="topLeft" title={email}>
-        {email}
+    render: (permissionName: string) => (
+      <Tooltip placement="topLeft" title={permissionName}>
+        <strong>{permissionName}</strong>
       </Tooltip>
     ),
   },
