@@ -13,15 +13,16 @@ const Dashboard: React.FC = () => {
   return (
     <div style={{ display: 'flex' }}>
       <SidebarLayout collapsed={sidebarCollapsed} />
-      <main style={{ flex: 1}}>
+      <main style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
         <header className="bg-white border-b border-gray-200">
           <button onClick={toggleSidebar} className='p-2'>
-          {sidebarCollapsed ? 
-          <PanelRightClose /> : <PanelLeftClose />}
-        </button>
+            {sidebarCollapsed ? 
+            <PanelRightClose /> : <PanelLeftClose />}
+          </button>
         </header>
-        
-        <Outlet />
+        <div style={{ padding: '16px' }}>
+          <Outlet />
+        </div>
       </main>
     </div>
   );

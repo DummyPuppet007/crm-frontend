@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import CreateButton from "../common/CreateButton";
 import { useEffect, useState } from "react";
 import ModuleForm from "../Form/ModuleForm";
 import { FetchData } from "../../services/FetchData";
@@ -39,11 +39,7 @@ const Module: React.FC = () => {
     return (
         <div className="flex flex-col m-6">
             <div className="flex flex-col items-end mb-4">
-                <Button
-                    color='default' variant='solid'
-                    style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}
-                    onClick={() => setModalOpen(true)}
-                >Create Module</Button>
+                <CreateButton label="Module" onClick={() => setModalOpen(true)} />
                 <ModuleForm open={modalOpen} onClose={() => setModalOpen(false)} refreshData={fetchModules} />
             </div>
             <AdvancedDataTable
@@ -53,6 +49,7 @@ const Module: React.FC = () => {
                 title="Module List"
                 searchableColumns={['moduleName', 'description']}
                 showRefresh={true}
+                className="shadow-md"
                 onRefresh={fetchModules}
                 rowKey="id"
             />

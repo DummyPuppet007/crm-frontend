@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import CreateButton from "../common/CreateButton";
 import { useEffect, useState } from "react";
 import type { ActionList } from "../../types/auth.types";
 import ActionForm from "../Form/ActionForm";
@@ -39,11 +39,7 @@ const Action : React.FC = () => {
     return (
         <div className="flex flex-col m-6">
             <div className="flex flex-col items-end mb-4">
-                <Button
-                    color='default' variant='solid'
-                    style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}
-                    onClick={() => setModalOpen(true)}
-                >Create Action</Button>
+                <CreateButton label="Action" onClick={() => setModalOpen(true)} />
                 <ActionForm open={modalOpen} onClose={() => setModalOpen(false)} refreshData={fetchActions}/>
             </div>
             <AdvancedDataTable
@@ -53,6 +49,7 @@ const Action : React.FC = () => {
                             title="Action List"
                             searchableColumns={['actionName', 'description']}
                             showRefresh={true}
+                            className="shadow-md"
                             onRefresh={fetchActions}
                             rowKey="id"
                         />

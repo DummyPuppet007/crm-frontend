@@ -96,7 +96,7 @@ import Highlighter from 'react-highlight-words';
         </div>
       ),
       filterIcon: (filtered: boolean) => (
-        <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined, fontSize: '1.1rem' }} />
       ),
       onFilter: (value: any, record: T) =>
         record[dataIndex]

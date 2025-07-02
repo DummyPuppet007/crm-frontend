@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import CreateButton from "../common/CreateButton";
 import { useEffect, useState } from "react";
 import type { PermissionList } from "../../types/auth.types";
 import { FetchData } from "../../services/FetchData";
@@ -50,11 +50,7 @@ const Permission: React.FC = () => {
     return (
         <div className="flex flex-col m-6">
             <div className="flex flex-col items-end mb-4">
-                <Button
-                    color='default' variant='solid'
-                    style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}
-                    onClick={() => setModalOpen(true)}
-                >Create Permission</Button>
+                <CreateButton label="Permission" onClick={() => setModalOpen(true)} />
                 <PermissionForm open={modalOpen} onClose={() => setModalOpen(false)} refreshData={fetchPermissions} />
             </div>
             <AdvancedDataTable
@@ -64,6 +60,7 @@ const Permission: React.FC = () => {
                 title="Permission List"
                 searchableColumns={['permissionName', 'moduleName', 'actionName']}
                 showRefresh={true}
+                className="shadow-md"
                 onRefresh={fetchPermissions}
                 rowKey="id"
             />

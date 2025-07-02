@@ -1,4 +1,4 @@
-import {  Button } from 'antd';
+import CreateButton from "../common/CreateButton";
 import RoleForm from '../Form/RoleForm';
 import { useEffect, useState } from 'react';
 import { FetchData } from '../../services/FetchData';
@@ -39,11 +39,7 @@ const Role: React.FC = () => {
   return (
     <div className="flex flex-col m-6">
       <div className="flex flex-col items-end mb-4">
-                <Button
-          color='default' variant='solid'
-          style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}
-          onClick={() => setModalOpen(true)}
-        >Create Role</Button>
+                <CreateButton label="Role" onClick={() => setModalOpen(true)} color="primary" />
         <RoleForm open={modalOpen} onClose={() => setModalOpen(false)} refreshData={fetchRoles}/>
       </div>
 
@@ -68,6 +64,7 @@ const Role: React.FC = () => {
         title="Role List"
         searchableColumns={['roleName', 'description']}
         showRefresh={true}
+        className="shadow-md"
         onRefresh={fetchRoles}
         rowKey="id"
       />
