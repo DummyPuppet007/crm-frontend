@@ -19,28 +19,30 @@ export function NavMain({
 }) {
     const location = useLocation();
 
-    const renderMenuItems = (items: any[]) =>
+    const renderMenuItems = (items: any[], level = 0) =>
         items.map((item) =>
             item.items && item.items.length > 0 ? ( 
                 <SubMenu
                     key={item.title}
                     label={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                            {item.icon && <item.icon style={{ marginRight: 8 }} />}
-                            {item.title}
-                        </span>
+                        <div className="flex items-center">
+                            {item.icon && <item.icon className="h-4 w-4 mr-2 flex-shrink-0" />}
+                            <span className="truncate">{item.title}</span>
+                        </div>
                     }
+                    className={`${level > 0 ? 'pl-4' : ''}`}
                 >
-                    {renderMenuItems(item.items)}
+                    {renderMenuItems(item.items, level + 1)}
                 </SubMenu>
             ) : (
                 <MenuItem
                     key={item.title}
-                    component={<Link to={`${item.url}`} />}
-                    icon={item.icon ? <item.icon /> : undefined}
+                    component={<Link to={`${item.url}`} className="block w-full h-full overflow-hidden" />}
+                    icon={item.icon ? <item.icon className="h-4 w-4 flex-shrink-0" /> : undefined}
                     active={location.pathname.includes(item.url)}
+                    className={`${level > 0 ? 'pl-8' : ''}`}
                 >
-                    {item.title}
+                    <span className="truncate">{item.title}</span>
                 </MenuItem>
             )
         );

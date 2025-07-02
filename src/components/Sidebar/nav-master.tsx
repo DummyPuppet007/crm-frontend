@@ -14,37 +14,40 @@ export function NavMaster({ masters } : { masters : {
     }[] }) {
         const location = useLocation();
 
-        const renderMasterItems = (masters: any[]) =>
+        const renderMasterItems = (masters: any[], level = 0) =>
         masters.map((master) =>
           master.items && master.items.length > 0 ? (
             <SubMenu
               key={master.name}
               label={
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                  {master.icon && <master.icon style={{ marginRight: 8 }} />}
-                  {master.name}
-                </span>
+                <div className="flex items-center">
+                  {master.icon && <master.icon className="h-4 w-4 mr-2 flex-shrink-0 overflow-hidden" />}
+                  <span className="truncate">{master.name}</span>
+                </div>
               }
+              className={`${level > 0 ? 'pl-4' : ''}`}
             >
               {master.items.map((item: any) => (
                 <MenuItem
                   key={item.name}
-                  component={<Link to={`/${item.url}`} />}
-                  icon={item.icon ? <item.icon /> : undefined}
+                  component={<Link to={`/${item.url}`} className="block w-full h-full overflow-hidden" />}
+                  icon={item.icon ? <item.icon className="h-4 w-4 flex-shrink-0" /> : undefined}
                   active={location.pathname.includes(item.url)}
+                  className={`${level > 0 ? 'pl-8' : 'pl-4'}`}
                 >
-                  {item.name}
+                  <span className="truncate">{item.name}</span>
                 </MenuItem>
               ))}
             </SubMenu>
           ) : (
             <MenuItem
               key={master.name}
-              component={<Link to={`/${master.url}`} />}
-              icon={master.icon ? <master.icon /> : undefined}
+              component={<Link to={`/${master.url}`} className="block w-full h-full overflow-hidden" />}
+              icon={master.icon ? <master.icon className="h-4 w-4 flex-shrink-0" /> : undefined}
               active={location.pathname.includes(master.url)}
+              className={`${level > 0 ? 'pl-8' : ''}`}
             >
-              {master.name}
+              <span className="truncate">{master.name}</span>
             </MenuItem>
           )
         );
