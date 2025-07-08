@@ -2,6 +2,8 @@ import { createBrowserRouter, Route } from 'react-router-dom';
 import { Action, LoginPage, Module, Permission, Register, Role, RolePermission, RoutePermission, UserPermission } from './components/index.ts';
 import NotFoundPage from './NotFoundPage.tsx';
 import Dashboard from './components/Dashboard/Dashboard.tsx';
+import Routes from './components/authorization/Routes.tsx';
+import CreateOrganization from './components/Master/CreateOrganization.tsx';
 
 export const router = createBrowserRouter([
     {
@@ -51,7 +53,20 @@ export const router = createBrowserRouter([
                     {
                         path: "route-permissions",
                         element: <RoutePermission />,
+                    },
+                    {
+                        path: "routes",
+                        element: <Routes />,
                     }
+                ]
+            },
+            {
+                path: "create",
+                children: [
+                    {
+                        path: "organization",
+                        element: <CreateOrganization />,
+                    },
                 ]
             }
         ]

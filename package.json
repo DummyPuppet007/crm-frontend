@@ -13,14 +13,18 @@
     "@ant-design/icons": "^6.0.0",
     "@tailwindcss/vite": "^4.1.10",
     "antd": "^5.26.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.0",
     "lucide-react": "^0.522.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-highlight-words": "^0.21.0",
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^7.6.2",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
-    "zod": "^3.25.67"
+    "zod": "^3.25.67",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

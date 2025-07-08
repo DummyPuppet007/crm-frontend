@@ -32,7 +32,7 @@ import Highlighter from 'react-highlight-words';
     title,
     bordered = true,
     size = 'middle',
-    pageSize = 10,
+    pageSize: initialPageSize = 10,
     pageSizeOptions = ['10', '20', '50', '100'],
     showSizeChanger = true,
     showQuickJumper = true,
@@ -45,6 +45,17 @@ import Highlighter from 'react-highlight-words';
     showRefresh = false,
     onRefresh,
   }: AdvancedDataTableProps<T>) {
+    const [pagination, setPagination] = useState({
+      current: 1,
+      pageSize: initialPageSize,
+    });
+
+    const handleTableChange = (newPagination: any) => {
+      setPagination({
+        ...pagination,
+        ...newPagination,
+      });
+    };
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -138,17 +149,31 @@ import Highlighter from 'react-highlight-words';
       loading,
       rowKey,
       pagination: {
-        pageSize,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
         showSizeChanger,
         showQuickJumper,
         showTotal: (total, range) =>
           `${range[0]}-${range[1]} of ${total} items`,
         pageSizeOptions,
+        onShowSizeChange: (current, size) => {
+          setPagination({
+            current: 1, // Reset to first page when changing page size
+            pageSize: size,
+          });
+        },
+        onChange: (page, pageSize) => {
+          setPagination({
+            current: page,
+            pageSize: pageSize || pagination.pageSize,
+          });
+        },
       },
       scroll,
       size,
       bordered,
       expandable,
+      onChange: handleTableChange,
       ...tableProps,
     };
 

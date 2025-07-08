@@ -10,7 +10,6 @@ interface RoutePermissionFormProps {
     refreshData: () => void;
 }
 
-const createRoutePermission = async (formData: RoutePermissionFormData) => {}
 
 const RoutePermissionForm: React.FC<RoutePermissionFormProps> = ({ open, onClose, refreshData }) => {
     const [form] = Form.useForm();
@@ -49,6 +48,29 @@ const RoutePermissionForm: React.FC<RoutePermissionFormProps> = ({ open, onClose
                 message.error("Error: " + error.message);
             }
         }
+
+        const createRoutePermission = async (formData: RoutePermissionFormData) => {
+            try {
+                setLoading(true);
+                const response = await FetchData<any>({
+                    url: "access/add-route-permission",
+                    method: "POST",
+                    data: formData,
+                });
+        
+                if (!response || response.statusCode !== 200) {
+                    setError("Error : Failed To Create Route Permission." + response.message);
+                }
+                message.success('Route Permission created successfully!');
+                form.resetFields();
+                onClose();
+                refreshData();
+            } catch (error: any) {
+                message.error("Error: " + error.message);
+            } finally {
+                setLoading(false);
+            }
+        }        
 
         const onFinish = async (values: RoutePermissionFormData) => {
                     try {
@@ -96,13 +118,20 @@ const RoutePermissionForm: React.FC<RoutePermissionFormProps> = ({ open, onClose
                         rules={[{ required: true, message: 'Please select a route!' }]}
                     >
                         {routes && routes.length > 0 ? (
-                            <Select placeholder="Select an user" autoFocus>
-                                {routes.map((route) => (
-                                    <Select.Option key={route.routeId} value={route.routeId}>
-                                        {route.routeName}
-                                    </Select.Option>
-                                ))}
-                            </Select>
+                            <Select
+                            showSearch
+                            style={{ width: 315 }}
+                            placeholder="Search to Select"
+                            optionFilterProp="label"
+                            filterSort={(optionA, optionB) =>
+                                String(optionA?.label ?? '').toLowerCase().localeCompare(String(optionB?.label ?? '').toLowerCase())
+                            }
+                            options={routes.map((route: any) => ({
+                                value: route.routeId,
+                                label: `${route.routeName} - ${route.httpMethod}`,
+                            }))}
+                        />
+
                         ) : (
                             <p className="text-red-400" style={{ margin: 0 }}>
                                 No Routes Available...

@@ -54,7 +54,7 @@ const Register: React.FC = () => {
           data={users}
           loading={loading}
           title="User List"
-          searchableColumns={["username"]}
+          searchableColumns={["username", "firstName", "lastName"]}
           showRefresh={true}
           className="shadow-md"
           onRefresh={fetchUsers}

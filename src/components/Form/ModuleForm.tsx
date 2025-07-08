@@ -58,7 +58,7 @@ const ModuleForm : React.FC<ModuleFormProps> = ({open, onClose, refreshData}) =>
         <>
             <CustomModal
                 open={open}
-                title="Create Role"
+                title="Create Module"
                 okText='Create'
                 cancelText='Cancel'
                 onOk={form.submit}

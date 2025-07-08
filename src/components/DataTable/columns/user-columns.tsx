@@ -14,13 +14,14 @@ export const userColumns: ColumnsType<UserList> = [
   },
   {
   title: 'Name',
-  key: 'firstName',
+  dataIndex: ['firstName', 'lastName'],
+  key: 'fullName',
   sorter: (a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
   sortDirections: ['ascend', 'descend'],
   ellipsis: {
     showTitle: false,
   },
-  render: (_: any, record: { firstName: string; lastName: string }) => {
+  render: (_, record) => {
     const fullName = `${record.firstName} ${record.lastName}`;
     return (
       <Tooltip placement="topLeft" title={fullName}>
@@ -28,10 +29,14 @@ export const userColumns: ColumnsType<UserList> = [
       </Tooltip>
     );
   },
+  onFilter: (value, record) => {
+    const fullName = `${record.firstName} ${record.lastName}`;
+    return fullName.includes(String(value).toLowerCase());
+  },
 },
 
   {
-    title: 'LogIn Id',
+    title: 'Username',
     dataIndex: 'username',
     key: 'username',
     ellipsis: {
@@ -40,6 +45,19 @@ export const userColumns: ColumnsType<UserList> = [
     render: (username: string) => (
       <Tooltip placement="topLeft" title={username}>
         {username}
+      </Tooltip>
+    ),
+  },
+  {
+    title: 'Role',
+    dataIndex: 'role',
+    key: 'role',
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (role: { roleName: string }) => (
+      <Tooltip placement="topLeft" title={role.roleName}>
+        {role.roleName}
       </Tooltip>
     ),
   },
