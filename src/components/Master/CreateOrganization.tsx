@@ -12,8 +12,10 @@ import {
   Col,
   Typography,
   Spin,
+  message,
 } from "antd";
 import {
+  createOrganization,
   getCompanyTypes,
   getIndustries,
   getSources,
@@ -30,6 +32,7 @@ import {
 } from "../../services/MasterService/organizationService";
 import ErrorMessage from "../Misc/ErrorMessage";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import type { OrganizationType } from "../../types/organization.type";
 
 type Organization = {
   id: number;
@@ -52,8 +55,19 @@ const CreateOrganization: React.FC = () => {
   const [countries, setCountries] = useState<CountryType[]>([]);
   const [states, setStates] = useState<StateType[]>([]);
   const [cities, setCities] = useState<CityType[]>([]);
-  const [selectedCountryId, setSelectedCountryId] = useState<number | null>(null);
+  const [selectedCountryId, setSelectedCountryId] = useState<number | null>(
+    null
+  );
   const [selectedStateId, setSelectedStateId] = useState<number | null>(null);
+  const [soleProprietor, setSoleProprietor] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const stepFieldNames: Record<number, string[]> = {
+    0: ["name", "description", "companyTypeId", "parentOrganizationId", "industryId", "sourceId", "gstinNumber"],
+    1: ["contactPerson"],
+    2: ["phoneNumbers", "emailAddresses"],
+    3: ["addresses"],
+  };
 
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
@@ -199,8 +213,23 @@ const CreateOrganization: React.FC = () => {
     fetchData();
   }, []);
 
-  const onFinish = (values: any) => {
-    console.log("Form values:", values);
+  const onFinish = async (values: OrganizationType) => {
+    try {
+      setIsSubmitting(true);
+      const result = await createOrganization(values);
+      if (result.success) {
+        message.success(result.message);
+
+        form.resetFields();
+        setCurrent(0);
+      }else{
+        message.error(result.message);
+      }
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const steps = [
@@ -247,6 +276,28 @@ const CreateOrganization: React.FC = () => {
                   placeholder="Select company type"
                   showSearch
                   optionFilterProp="children"
+                  onChange={(value) => {
+                    const selectedType = companyTypes.find(
+                      (type) => type.id === value
+                    );
+                    const isSole =
+                      selectedType?.companyType.toLowerCase() ===
+                      "sole proprietorship";
+
+                    setSoleProprietor(isSole);
+
+                    if (isSole) {
+                      const organizationName = form.getFieldValue("name");
+                      if (organizationName) {
+                        form.setFieldValue("contactPerson", [
+                          {
+                            name: organizationName,
+                            isPrimary: true,
+                          },
+                        ]);
+                      }
+                    }
+                  }}
                   filterOption={(input: string, option: any) =>
                     option?.children
                       ?.toLowerCase()
@@ -371,6 +422,7 @@ const CreateOrganization: React.FC = () => {
                           danger
                           icon={<MinusCircleOutlined />}
                           onClick={() => remove(name)}
+                          disabled={soleProprietor}
                         >
                           Remove
                         </Button>
@@ -390,6 +442,7 @@ const CreateOrganization: React.FC = () => {
                           <Input
                             size="large"
                             placeholder="Enter contact person name"
+                            disabled={soleProprietor}
                           />
                         </Form.Item>
                       </Col>
@@ -400,7 +453,7 @@ const CreateOrganization: React.FC = () => {
                           label="Primary Contact Person"
                           valuePropName="checked"
                         >
-                          <Switch />
+                          <Switch disabled={soleProprietor} />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -429,15 +482,25 @@ const CreateOrganization: React.FC = () => {
                                       },
                                     ]}
                                   >
-                                    <Input placeholder="Enter email address" />
+                                    <Input
+                                      placeholder="Enter email address"
+                                      disabled={soleProprietor}
+                                    />
                                   </Form.Item>
                                 </Col>
                                 <Col span={6}>
                                   <Form.Item
-                                    {...rest}
                                     name={[emailName, "emailType"]}
                                   >
-                                    <Input placeholder="Type (e.g., work)" />
+                                    <Select
+                                      defaultValue={"Work"}
+                                      disabled={soleProprietor}
+                                      options={[
+                                        { value: "Work", label: "Work" },
+                                        { value: "Personal", label: "Personal" },
+                                        { value: "Other", label: "Other" },
+                                      ]}
+                                    />
                                   </Form.Item>
                                 </Col>
                                 <Col span={4}>
@@ -451,6 +514,7 @@ const CreateOrganization: React.FC = () => {
                                       checkedChildren="Primary"
                                       unCheckedChildren="Secondary"
                                       defaultChecked={false}
+                                      disabled={soleProprietor}
                                     />
                                   </Form.Item>
                                 </Col>
@@ -473,6 +537,7 @@ const CreateOrganization: React.FC = () => {
                             onClick={() => addEmail()}
                             icon={<PlusOutlined />}
                             className="w-full"
+                            disabled={soleProprietor}
                           >
                             Add Email
                           </Button>
@@ -503,15 +568,25 @@ const CreateOrganization: React.FC = () => {
                                       },
                                     ]}
                                   >
-                                    <Input placeholder="Enter phone number" />
+                                    <Input
+                                      disabled={soleProprietor}
+                                      placeholder="Enter phone number"
+                                    />
                                   </Form.Item>
                                 </Col>
                                 <Col span={6}>
                                   <Form.Item
-                                    {...rest}
                                     name={[phoneName, "phoneType"]}
                                   >
-                                    <Input placeholder="Type (e.g., mobile)" />
+                                    <Select
+                                      defaultValue={"Mobile"}
+                                      disabled={soleProprietor}
+                                      options={[
+                                        { value: "Mobile", label: "Mobile" },
+                                        { value: "Whatsapp", label: "Whatsapp" },
+                                        { value: "Other", label: "Other" },
+                                      ]}
+                                    />
                                   </Form.Item>
                                 </Col>
                                 <Col span={4}>
@@ -524,6 +599,7 @@ const CreateOrganization: React.FC = () => {
                                       checkedChildren="Primary"
                                       unCheckedChildren="Secondary"
                                       defaultChecked={false}
+                                      disabled={soleProprietor}
                                     />
                                   </Form.Item>
                                 </Col>
@@ -543,6 +619,7 @@ const CreateOrganization: React.FC = () => {
                             onClick={() => addPhone()}
                             icon={<PlusOutlined />}
                             className="w-full"
+                            disabled={soleProprietor}
                           >
                             Add Phone
                           </Button>
@@ -557,6 +634,7 @@ const CreateOrganization: React.FC = () => {
                   icon={<PlusOutlined />}
                   size="large"
                   className="w-full h-12 mt-10"
+                  disabled={soleProprietor}
                 >
                   Add Contact Person
                 </Button>
@@ -598,10 +676,17 @@ const CreateOrganization: React.FC = () => {
                         </Form.Item>
                       </Col>
                       <Col span={6}>
-                        <Form.Item {...restField} name={[name, "phoneType"]}>
-                          <Input
+                        <Form.Item {...restField} name={[name, "phoneType"]} initialValue="Landline" rules={[
+                          { required: true, message: "Please select phone type" },
+                        ]}>
+                          <Select
                             size="large"
-                            placeholder="Type (e.g., office)"
+                            defaultValue={"Landline"}
+                            options={[
+                              { value: "Landline", label: "Landline" },
+                              { value: "Fax", label: "Fax" },
+                              { value: "Other", label: "Other" },
+                            ]}
                           />
                         </Form.Item>
                       </Col>
@@ -666,10 +751,16 @@ const CreateOrganization: React.FC = () => {
                         </Form.Item>
                       </Col>
                       <Col span={6}>
-                        <Form.Item {...restField} name={[name, "emailType"]}>
-                          <Input
+                        <Form.Item {...restField} name={[name, "emailType"]} initialValue="Work" rules={[
+                          {required: true, message: "Please Select email type"}
+                        ]}>
+                          <Select
                             size="large"
-                            placeholder="Type (e.g., support)"
+                            defaultValue={"Work"}
+                            options={[
+                              { value: "Work", label: "Work" },
+                              { value: "Other", label: "Other" },
+                            ]}
                           />
                         </Form.Item>
                       </Col>
@@ -805,7 +896,7 @@ const CreateOrganization: React.FC = () => {
                             onChange={handleStateChange}
                             notFoundContent={null}
                             filterOption={false}
-                            allowClear  
+                            allowClear
                             defaultActiveFirstOption={false}
                           >
                             {states.map((state) => (
@@ -858,8 +949,25 @@ const CreateOrganization: React.FC = () => {
                           {...restField}
                           name={[name, "addressType"]}
                           label="Address Type"
+                          initialValue="Work"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please select address type",
+                            },
+                          ]}
                         >
-                          <Input size="large" placeholder="e.g., Head Office" />
+                          <Select
+                            size="large"
+                            defaultValue={"Work"}
+                            options={[
+                              { value: "Work", label: "Work" },
+                              { value: "HeadOffice", label: "Head Office" },
+                              { value: "Branch", label: "Branch" },
+                              { value: "Factory", label: "Factory" },
+                              { value: "Other", label: "Other" },
+                            ]}
+                          />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -938,7 +1046,16 @@ const CreateOrganization: React.FC = () => {
               }}
               autoComplete="off"
             >
-              <div className="min-h-[400px] mb-4">{steps[current].content}</div>
+              <div className="min-h-[400px] mb-4">
+                {steps.map((step, index) => (
+                  <div
+                    key={index}
+                    style={{ display: index === current ? "block" : "none" }}
+                  >
+                    {step.content}
+                  </div>
+                ))}
+              </div>
 
               <div className="flex justify-between pt-6 border-t border-gray-200">
                 <div>
@@ -956,13 +1073,16 @@ const CreateOrganization: React.FC = () => {
                     <Button
                       type="primary"
                       size="large"
-                      onClick={() => setCurrent(current + 1)}
+                      onClick={async () => {
+                        await form.validateFields(stepFieldNames[current]);
+                        setCurrent(current + 1);
+                      }}
                     >
                       Next
                     </Button>
                   )}
                   {current === steps.length - 1 && (
-                    <Button type="primary" size="large" htmlType="submit">
+                    <Button type="primary" size="large" htmlType="submit" loading={isSubmitting}>
                       Create Organization
                     </Button>
                   )}

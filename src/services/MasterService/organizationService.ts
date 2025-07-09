@@ -1,3 +1,4 @@
+import type { OrganizationType } from "../../types/organization.type";
 import { FetchData, type FetchDataResponse } from "../FetchData";
 
 export type SourceType = {
@@ -17,7 +18,7 @@ export type IndustryType = {
     description : string;
 }
 
-export type OrganizationType = {
+export type OrganizationSearchType = {
     id : number;
     name : string;
     contactPersons : {
@@ -49,8 +50,8 @@ export const getIndustries = async () : Promise<FetchDataResponse<IndustryType[]
     return result;
 }
 
-export const searchOrganizations = async (value: string): Promise<FetchDataResponse<OrganizationType[]>> => {
-    const result = await FetchData<OrganizationType[]>({
+export const searchOrganizations = async (value: string): Promise<FetchDataResponse<OrganizationSearchType[]>> => {
+    const result = await FetchData<OrganizationSearchType[]>({
         url: `master/organizations/search?query=${value}`,
     });
 
@@ -96,3 +97,35 @@ export const searchCities = async (stateId: number, query: string): Promise<Fetc
     });
     return result;
 };
+
+const convertUndefinedToNull = (obj: any): any => {
+  if (obj === undefined) return null;
+  if (obj === null) return null;
+  if (typeof obj !== 'object') return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => convertUndefinedToNull(item));
+  }
+  
+  const newObj: any = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[key] = convertUndefinedToNull(obj[key]);
+    }
+  }
+  return newObj;
+};
+
+export const createOrganization = async(data: OrganizationType) : Promise<FetchDataResponse<OrganizationType>> => {
+    // const sanitizedData = convertUndefinedToNull(data);
+    
+    const result = await FetchData<OrganizationType>({
+        url: "master/organizations",
+        method: "POST",
+        data: data,
+    });
+
+    console.log(result);
+
+    return result;
+}

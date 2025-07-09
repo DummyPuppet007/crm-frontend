@@ -38,30 +38,34 @@ export default function Breadcrumbs() {
 
   if (isHomePage) return null;
 
+  const items = [
+    {
+      title: (
+        <>
+          <HomeOutlined style={{ marginRight: 4 }} />
+          <Link to="/">Home</Link>
+        </>
+      ),
+      key: 'home',
+    },
+    ...breadcrumbs.map((crumb, index) => ({
+      title: index < breadcrumbs.length - 1 ? (
+        <Link to={crumb.path}>{crumb.label}</Link>
+      ) : (
+        <span style={{ color: '#1890ff', fontWeight: 500 }}>
+          {crumb.label}
+        </span>
+      ),
+      key: crumb.path,
+    })),
+  ];
+
   return (
     <div className="breadcrumb-container">
       <Breadcrumb 
+        items={items}
         separator=">"
-      >
-        <Breadcrumb.Item>
-          <Link to="/">
-            <HomeOutlined style={{ marginRight: 4 }} />
-            Home
-          </Link>
-        </Breadcrumb.Item>
-        
-        {breadcrumbs.map((crumb, index) => (
-          <Breadcrumb.Item key={crumb.path}>
-            {index < breadcrumbs.length - 1 ? (
-              <Link to={crumb.path}>{crumb.label}</Link>
-            ) : (
-              <span style={{ color: '#1890ff', fontWeight: 500 }}>
-                {crumb.label}
-              </span>
-            )}
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
+      />
     </div>
   );
 }

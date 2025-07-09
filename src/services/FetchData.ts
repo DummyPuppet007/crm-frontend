@@ -30,12 +30,11 @@ export async function FetchData<T>({
         
         if (!response.ok) {
             const errorData = await response.json();
-
             return {
                 success : false,
-                statusCode: errorData.statusCode,
-                message: errorData.message,
-                data: null,
+                statusCode: errorData.error.statusCode,
+                message: errorData.error.message,
+                data: errorData.error.details,
             };
         }
 
