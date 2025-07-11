@@ -72,6 +72,16 @@ const data = {
         { name: "Product", url: "create/product", icon: Package },
       ],
     },
+    {
+      name: "List",
+      url: "list",
+      icon: List,
+      items: [
+        { name: "Organizations", url: "list/organizations", icon: Building2 },
+        { name: "Persons", url: "list/persons", icon: User },
+        { name: "Products", url: "list/products", icon: Package },
+      ],
+    },
   ],
 };
 
@@ -139,7 +149,7 @@ const { darkMode } = useTheme();
       <Dropdown
         key={label}
         menu={{ items }}
-        placement="right"
+        placement="bottomRight"
         overlayClassName="!bg-neutral-800"
       >
         <div

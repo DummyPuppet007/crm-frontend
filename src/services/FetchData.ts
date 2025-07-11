@@ -27,7 +27,7 @@ export async function FetchData<T>({
             body: data ? JSON.stringify(data) : null,
             credentials : "include",
         });
-        
+      
         if (!response.ok) {
             const errorData = await response.json();
             return {
@@ -40,7 +40,7 @@ export async function FetchData<T>({
 
         const responseData = await response.json();
 
-        console.log(responseData);
+      
         return {
             success : responseData.success,
             statusCode: 200,

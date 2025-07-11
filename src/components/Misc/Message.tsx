@@ -1,4 +1,4 @@
-import { message as antdMessage } from "antd";
+import { message as antdMessage, Button } from "antd";
 
 export default function Message({
     type,
@@ -27,6 +27,9 @@ export default function Message({
     return (
         <>
             {contextHolder}
+            <Button onClick={() => messageApi.success("This should be visible!")}>
+                Test Message
+            </Button>
         </>
     )
 }

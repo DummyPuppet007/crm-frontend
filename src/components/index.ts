@@ -7,6 +7,7 @@ import Permission from "./authorization/Permission";
 import RolePermission from "./authorization/Role-Permission";
 import UserPermission from "./authorization/User-Permission";
 import RoutePermission from "./authorization/Route-Permission";
+import ListOrganization from "./Master/ListOrganization";
 
 export 
 { 
@@ -18,5 +19,6 @@ export
     Permission,
     RolePermission,
     UserPermission,
-    RoutePermission
+    RoutePermission,
+    ListOrganization
 };

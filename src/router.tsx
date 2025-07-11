@@ -1,5 +1,5 @@
 import { createBrowserRouter, Route } from 'react-router-dom';
-import { Action, LoginPage, Module, Permission, Register, Role, RolePermission, RoutePermission, UserPermission } from './components/index.ts';
+import { Action, ListOrganization, LoginPage, Module, Permission, Register, Role, RolePermission, RoutePermission, UserPermission } from './components/index.ts';
 import NotFoundPage from './NotFoundPage.tsx';
 import Dashboard from './components/Dashboard/Dashboard.tsx';
 import Routes from './components/authorization/Routes.tsx';
@@ -66,6 +66,15 @@ export const router = createBrowserRouter([
                     {
                         path: "organization",
                         element: <CreateOrganization />,
+                    },
+                ]
+            },
+            {
+                path: "list",
+                children: [
+                    {
+                        path: "organizations",
+                        element: <ListOrganization />,
                     },
                 ]
             }

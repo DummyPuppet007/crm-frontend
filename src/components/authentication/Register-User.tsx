@@ -25,7 +25,7 @@ const Register: React.FC = () => {
         url: "auth/users",
         method: "GET",
       });
-
+   
       if (!response || response.statusCode !== 200) {
         setError("Error: Failed to fetch roles. " + response.message);
         return;

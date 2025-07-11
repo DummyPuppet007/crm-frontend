@@ -1,4 +1,5 @@
-import type { OrganizationType } from "../../types/organization.type";
+import type { FetchResult } from "vite";
+import type { Address, ContactPerson, OrganizationType } from "../../types/organization.type";
 import { FetchData, type FetchDataResponse } from "../FetchData";
 
 export type SourceType = {
@@ -24,6 +25,18 @@ export type OrganizationSearchType = {
     contactPersons : {
         name : string;
     };
+}
+
+export type OrganizationList = {
+    organizationId: number;
+    name: string;
+    industry: string;
+    companyType: string;
+    source: string;
+    phone: string;
+    email: string;
+    address: string;
+    country: string;
 }
 
 export const getSources = async () : Promise<FetchDataResponse<SourceType[]>> => {
@@ -125,7 +138,25 @@ export const createOrganization = async(data: OrganizationType) : Promise<FetchD
         data: data,
     });
 
-    console.log(result);
+    return result;
+}
+
+export const addContactPerson = async(data: ContactPerson) : Promise<FetchDataResponse<ContactPerson>> => {
+    const result = await FetchData<ContactPerson>({
+        url: "master/persons",
+        method: "POST",
+        data: data,
+    });
+
+    return result;
+}
+
+export const addAddress = async(data: Address) : Promise<FetchDataResponse<Address>> => {
+    const result = await FetchData<Address>({
+        url: "master/addresses",
+        method: "POST",
+        data: data,
+    });
 
     return result;
 }

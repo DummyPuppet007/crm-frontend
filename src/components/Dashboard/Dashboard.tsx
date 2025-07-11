@@ -1,5 +1,3 @@
-// src/components/Dashboard/Dashboard.tsx
-import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import ThemeToggle from '../common/ThemeToggle';
 import { useTheme } from '../../context/ThemeContext';

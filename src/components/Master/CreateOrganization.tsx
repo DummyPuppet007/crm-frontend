@@ -61,6 +61,8 @@ const CreateOrganization: React.FC = () => {
   const [selectedStateId, setSelectedStateId] = useState<number | null>(null);
   const [soleProprietor, setSoleProprietor] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
 
   const stepFieldNames: Record<number, string[]> = {
     0: ["name", "description", "companyTypeId", "parentOrganizationId", "industryId", "sourceId", "gstinNumber"],
@@ -138,7 +140,6 @@ const CreateOrganization: React.FC = () => {
   };
 
   const handleSearchForCity = async (value: string) => {
-    console.log("Selected State ID:", selectedStateId);
     if (!selectedStateId) {
       setCities([]);
       return;
@@ -218,15 +219,16 @@ const CreateOrganization: React.FC = () => {
       setIsSubmitting(true);
       const result = await createOrganization(values);
       if (result.success) {
-        message.success(result.message);
+        messageApi.success(result.message);
 
         form.resetFields();
         setCurrent(0);
+        setError(null);
       }else{
-        message.error(result.message);
+        setError(result.message);
       }
     } catch (error: any) {
-      message.error(error.message);
+      setError(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -490,7 +492,9 @@ const CreateOrganization: React.FC = () => {
                                 </Col>
                                 <Col span={6}>
                                   <Form.Item
+                                    {...rest}
                                     name={[emailName, "emailType"]}
+                                    initialValue="Work"
                                   >
                                     <Select
                                       defaultValue={"Work"}
@@ -576,7 +580,9 @@ const CreateOrganization: React.FC = () => {
                                 </Col>
                                 <Col span={6}>
                                   <Form.Item
+                                    {...rest}
                                     name={[phoneName, "phoneType"]}
+                                    initialValue="Mobile"
                                   >
                                     <Select
                                       defaultValue={"Mobile"}
@@ -1015,6 +1021,7 @@ const CreateOrganization: React.FC = () => {
           />
         </div>
       )}
+      {contextHolder}
       <div className="max-w-6xl mx-auto px-4">
         <Spin spinning={loading} tip="Loading..." size="large">
           <Card className="shadow-lg border-0">
