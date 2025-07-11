@@ -152,9 +152,7 @@ export const getOrganizationColumns = (onAction: (org: OrganizationList, type: '
                             onAction(record, 'address');
                             break;
                         case 'contact':
-                            // Handle add contact person action
-                            console.log('Add contact person for:', record.name);
-                            // Add your add contact person logic here
+                            onAction(record, 'contact');
                             break;
                         case 'person':
                             onAction(record, 'person');

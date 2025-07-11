@@ -5,6 +5,7 @@ import { getOrganizationColumns } from "../DataTable/columns/organization-column
 import type { OrganizationList } from "../../services/MasterService/organizationService";
 import ContactPersonForm from "../Form/ContactPersonForm";
 import AddressForm from "../Form/AddressForm";
+import ContactForm from "../Form/ContactForm";
 
 const ListOrganization: React.FC = () => {
   const [modalType, setModalType] = useState<null | 'detail' | 'address' | 'contact' | 'person'>(null);
@@ -88,6 +89,7 @@ const ListOrganization: React.FC = () => {
       </div>
       <ContactPersonForm open={modalType === 'person'} onClose={closeModal} org={selectedOrg} />
       <AddressForm open={modalType === 'address'} onClose={closeModal} org={selectedOrg} />
+      <ContactForm open={modalType === 'contact'} onClose={closeModal} org={selectedOrg} />
     </>
   )
 }
